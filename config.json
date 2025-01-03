@@ -1,0 +1,37 @@
+{
+  "general": {
+    "input_directory": "path/to/las/files",
+    "output_directory": "path/to/output"
+  },
+  "analysis": {
+   "input_directory": "D:\\data\\las_org\\data_las_stpls3d\\test_analisis",
+    "output_csv": "data/analysis/analysis_num_points.csv"
+  },
+  "filtering": {
+    "threshold_points": 10000,
+    "filtered_directory": "path/to/filtered/files"
+  },
+  "features": {
+    "num_points": 5000,
+    "grid_size": 10,
+    "num_neighbors": 5,
+    "features_to_generate": ["mean_z_minus_z_min"],
+    "meta_file": "path/to/meta_features.json",
+    "features_output_directory": "path/to/features"
+  },
+  "statistics": {
+    "input_directory": "path/to/features",
+    "output_csv": "path/to/stat_max_mean_knn_dist.csv",
+    "meta_file": "path/to/meta_features.json"
+  },
+  "feature_filtering": {
+    "max_distance_threshold": 0.5,
+    "above_threshold_directory": "path/to/above_threshold",
+    "below_threshold_directory": "path/to/below_threshold"
+  },
+  "visualization": {
+    "input_directory": "path/to/features",
+    "output_directory": "path/to/images",
+    "image_format": "rgba"
+  }
+}
