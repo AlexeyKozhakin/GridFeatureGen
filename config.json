@@ -4,34 +4,43 @@
     "output_directory": "path/to/output"
   },
   "analysis": {
-   "input_directory": "D:\\data\\las_org\\data_las_stpls3d\\test_analisis",
+   "input_directory": "D:\\data\\las_org\\data_las_stpls3d\\all_org_las_cut_rgb_32_test2",
+    "batch_size": 8,
     "output_csv": "data/analysis/analysis_num_points.csv"
   },
   "filtering": {
-    "threshold_points": 10000,
-    "filtered_directory": "path/to/filtered/files"
+    "threshold_points": 16384,
+    "filter_info": "file_info.csv"
   },
   "features": {
-    "num_points": 5000,
-    "grid_size": 10,
-    "num_neighbors": 5,
-    "features_to_generate": ["mean_z_minus_z_min"],
-    "meta_file": "path/to/meta_features.json",
-    "features_output_directory": "path/to/features"
+    "input_directory": "D:\\data\\las_org\\data_las_stpls3d\\all_org_las_cut_rgb_32_test2",
+    "num_points": 16384,
+    "grid_size": 128,
+    "num_neighbors": 4,
+    "batch_size": 6,
+    "features_to_generate": ["mean_z_minus_z_min", "rgb", "std_z", "mean_distance"],
+    "meta_file": "meta_features.json",
+    "features_output_directory": "D:\\data\\features"
   },
   "statistics": {
-    "input_directory": "path/to/features",
-    "output_csv": "path/to/stat_max_mean_knn_dist.csv",
-    "meta_file": "path/to/meta_features.json"
+    "input_directory": "D:\\data\\features",
+    "batch_size": 6,
+    "output_csv": "stat_max_mean_knn_dist.csv",
+    "meta_file": "meta_data.json",
+    "stat_dist": "stat_dist.json"
   },
   "feature_filtering": {
-    "max_distance_threshold": 0.5,
-    "above_threshold_directory": "path/to/above_threshold",
-    "below_threshold_directory": "path/to/below_threshold"
+    "threads": 63,
+    "max_distance_threshold": 4,
+    "data_csv": "stat_max_mean_knn_dist.csv",
+    "above_threshold_directory": "D:\\data\\features_above",
+    "below_threshold_directory": "D:\\data\\features_below"
   },
   "visualization": {
-    "input_directory": "path/to/features",
-    "output_directory": "path/to/images",
-    "image_format": "rgba"
+    "input_directory": "D:\\data\\features_below",
+    "output_directory": "D:\\data\\images_below",
+    "n_workers": 7,
+    "channels": ["rgb"],
+    "meta_file": "meta_data.json"
   }
 }
