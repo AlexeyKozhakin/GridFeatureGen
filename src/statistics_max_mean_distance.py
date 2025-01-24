@@ -18,13 +18,13 @@ meta_file = config['statistics']['meta_file']
 stat_file = config['statistics']['stat_dist']
 
 # Открытие файла JSON
-with open(meta_file, 'r') as file:
-    data = json.load(file)  # Загрузка содержимого в переменную data
+#with open(meta_file, 'r') as file:
+#    data = json.load(file)  # Загрузка содержимого в переменную data
 
 # Получение значения mean_distance
-mean_distance_column = data['mean_distance'][0]
-print(mean_distance_column)  # Вывод: [5]
-
+#mean_distance_column = data['mean_distance'][0]
+#print(mean_distance_column)  # Вывод: [5]
+mean_distance_column = 2
 # Get list of .pt files
 file_paths = [os.path.join(file_dir, f) for f in os.listdir(file_dir) if f.endswith('.pt')]
 base_dataset = TensorDatasetMaxMeanDist(file_paths, mean_distance_column)

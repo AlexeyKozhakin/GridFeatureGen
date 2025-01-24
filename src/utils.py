@@ -118,7 +118,7 @@ def load_las_to_tensor(file_path, num_points_lim=4096):
         las = laspy.read(file_path)
 
         # Извлечение координат и цветовых данных
-        points = torch.tensor(np.vstack((las.x, las.y, las.z, las.red, las.green, las.blue)).T,
+        points = torch.tensor(np.vstack((las.x-np.min(las.x), las.y-np.min(las.y), las.z, las.red/65535*256, las.green/65535*256, las.blue/65535*256)).T,
             dtype=torch.float32)
         # Тензор с размерностью (N, 6)
 
@@ -130,7 +130,7 @@ def load_las_to_tensor(file_path, num_points_lim=4096):
         if num_points > num_points_lim:
             # Случайная выборка точек
             sampled_points, sampled_indices = random_point_sampling(points, num_points_lim)
-
+            
             # Получаем классы для отобранных точек
             sampled_classes = classes[sampled_indices]
 
@@ -221,6 +221,17 @@ def feature_4_mean_distance(knn_data, grid, _):
     # Находим среднее расстояние
     mean_distance = distances.mean(dim=-1)  # (1, M, M)
     return mean_distance.unsqueeze(-1)  # Добавляем измерение для согласованности
+
+
+def feature_5_class(knn_data, _, __):
+    """
+    Найти стандартное отклонение z (третья координата) для соседей K.
+    """
+    classes_knn = knn_data[:, :, :, 6, :]  # Координаты z из (1, M, M, 7, K)
+    class_mode = classes_knn.mode(dim=-1).values  # Стандартное отклонение по соседям K
+    print("class_mode", class_mode.shape)
+    return class_mode.unsqueeze(-1)  # Добавляем измерение для согласованности
+
 
 class TensorDatasetMaxMeanDist(torch.utils.data.Dataset):
     def __init__(self, file_paths, column_dist):

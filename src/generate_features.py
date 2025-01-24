@@ -3,7 +3,7 @@ import json
 import torch
 from torch.utils.data import DataLoader
 from utils import LASDataset, GridTransformator, FeatureExtractor
-from utils import feature_1_mean_z, feature_2_mode_color, feature_3_std_z, feature_4_mean_distance
+from utils import feature_1_mean_z, feature_2_mode_color, feature_3_std_z, feature_4_mean_distance, feature_5_class
 
 
 # Dictionary mapping feature names to their respective functions
@@ -12,6 +12,7 @@ dict_feature_fun = {
     "rgb": feature_2_mode_color,
     "std_z": feature_3_std_z,
     "mean_distance": feature_4_mean_distance,
+    "class": feature_5_class,
 }
 
 # Read the configuration file
@@ -46,6 +47,11 @@ for batch_file_name, batch in data_loader:
     iter+=1
     print(f"Processing batch {iter}/{len(data_loader)}")
     print(batch.shape)  # Size (B, N, 7) or other depending on transform_fn
+      
+    #batch[:,:,:3] = batch[:,:,:3]/10
+    # Преобразование цветовых каналов и приведение к целым числам
+    #batch[:, :, 3:6] = (batch[:, :, 3:6] / 65535 * 255).round().int()
+
 
     # Compute KNN data and grid
     batch_knn_data, batch_grid = grid_transformator.compute(batch, M, K)
@@ -57,6 +63,9 @@ for batch_file_name, batch in data_loader:
 
     # Compute features
     features = extractor.compute(batch_knn_data, batch_grid, batch)
+
+    for name_feature in name_features:
+        print(name_feature, features[name_feature].shape)
 
     # Concatenate features into a final tensor
     final_features = torch.cat(

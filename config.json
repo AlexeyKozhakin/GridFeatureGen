@@ -4,43 +4,60 @@
     "output_directory": "path/to/output"
   },
   "analysis": {
-   "input_directory": "D:\\data\\las_org\\data_las_stpls3d\\all_org_las_cut_rgb_32_test2",
-    "batch_size": 8,
-    "output_csv": "data/analysis/analysis_num_points.csv"
+   "input_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/data_las_cut_100",
+    "batch_size": 128,
+    "output_csv": "analysis_num_points.csv"
   },
   "filtering": {
-    "threshold_points": 16384,
+    "threshold_points": 397280,
     "filter_info": "file_info.csv"
   },
   "features": {
-    "input_directory": "D:\\data\\las_org\\data_las_stpls3d\\all_org_las_cut_rgb_32_test2",
-    "num_points": 16384,
-    "grid_size": 128,
+    "input_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/data_las_cut_100",
+    "num_points": 262144,
+    "grid_size": 256,
     "num_neighbors": 4,
-    "batch_size": 6,
-    "features_to_generate": ["mean_z_minus_z_min", "rgb", "std_z", "mean_distance"],
+    "batch_size": 4,
+    "features_to_generate": ["mean_z_minus_z_min", "std_z", "mean_distance", "class"],
     "meta_file": "meta_features.json",
-    "features_output_directory": "D:\\data\\features"
+    "features_output_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/gfg/data_features_100"
   },
   "statistics": {
-    "input_directory": "D:\\data\\features",
-    "batch_size": 6,
+    "input_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/gfg/data_features_100",
+    "batch_size": 128,
     "output_csv": "stat_max_mean_knn_dist.csv",
     "meta_file": "meta_data.json",
     "stat_dist": "stat_dist.json"
   },
   "feature_filtering": {
-    "threads": 63,
-    "max_distance_threshold": 4,
+    "threads": 256,
+    "max_distance_threshold": 3,
     "data_csv": "stat_max_mean_knn_dist.csv",
-    "above_threshold_directory": "D:\\data\\features_above",
-    "below_threshold_directory": "D:\\data\\features_below"
+    "above_threshold_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/gfg/data_features_100_above",
+    "below_threshold_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/gfg/data_features_100_below"
   },
   "visualization": {
-    "input_directory": "D:\\data\\features_below",
-    "output_directory": "D:\\data\\images_below",
-    "n_workers": 7,
+    "input_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/gfg/data_features_64_below",
+    "output_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/gfg/data_features_64_below_img_no_rgb",
+    "n_workers": 256,
+    "channels": ["mean_z_minus_z_min", "std_z", "mean_distance"],
+    "meta_file": "meta_data.json"
+  },
+
+    "to_rgb": {
+    "input_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/codes/pointnet/test_predict_binary_ep90",
+    "output_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/codes/pointnet/test_predict_img_rgb_binary_ep90",
+    "n_workers": 2,
     "channels": ["rgb"],
     "meta_file": "meta_data.json"
-  }
+  },
+   "generate_pt2las":{
+    "input_las_dir": "/home/alexey/MUSAC/data/Malta/L_453_3974._100x100",
+    "input_pt_dir": "/mnt/working-ssd/alexey_kozhakin/MUSAC/codes/pointnet/test_predict",
+    "is_gen_rgb": 1,
+    "is_gen_label": 1,
+    "output_las_label_dir": "/home/alexey/MUSAC/data/Malta/L_453_3974._100x100_labels",
+    "output_las_rgb_dir": "/home/alexey/MUSAC/data/Malta/L_453_3974._100x100_rgb",
+    "map_label2rgb": "/path/to/map_label2rgb.py"
+} 
 }

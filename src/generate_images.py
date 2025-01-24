@@ -19,8 +19,8 @@ def tensor_to_image(tensor_path, output_dir, channels):
         return
 
     # Select the desired channels (0-indexed)
-    selected_tensor = tensor[..., channels]
-
+    selected_tensor = tensor[..., channels]/torch.max(tensor[..., channels])*255
+    #selected_tensor = tensor[..., channels]
     # Convert the tensor to a numpy array and scale to [0, 255]
     image_array = (selected_tensor.numpy()).astype(np.uint8)
 
@@ -67,16 +67,19 @@ if __name__ == "__main__":
     meta_file = config['visualization']['meta_file']
 
     # Открытие файла JSON
-    with open(meta_file, 'r') as file:
-        data = json.load(file)  # Загрузка содержимого в переменную data
+#    with open(meta_file, 'r') as file:
+#        data = json.load(file)  # Загрузка содержимого в переменную data
 
     # Получение значения mean_distance
     desired_channels = []
+    #data = {'rgb':[1,2,3]}
+    data = {"mean_z_minus_z_min":0,"std_z":4, "mean_distance":5}
 
-    for name_channel in name_channels:
-        desired_channels.extend(data[name_channel])
+    desired_channels.extend([0,4,5])
+    #for name_channel in name_channels:
+    #    desired_channels.extend(data[name_channel])
 
     # Specify which channels you want to keep (0-indexed)
     # print('desired_channels', desired_channels)
-
+    #desired_channels = [0,0,0]
     process_tensors(input_directory, output_directory, desired_channels, n_workers)
