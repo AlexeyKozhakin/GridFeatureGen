@@ -46,7 +46,7 @@ iter = 0
 for batch_file_name, batch in data_loader:
     iter+=1
     print(f"Processing batch {iter}/{len(data_loader)}")
-    print('batch.shape',batch.shape)  # Size (B, N, 7) or other depending on transform_fn
+    print(batch.shape)  # Size (B, N, 7) or other depending on transform_fn
       
     #batch[:,:,:3] = batch[:,:,:3]/10
     # Преобразование цветовых каналов и приведение к целым числам
@@ -55,7 +55,7 @@ for batch_file_name, batch in data_loader:
 
     # Compute KNN data and grid
     batch_knn_data, batch_grid = grid_transformator.compute(batch, M, K)
-    print('batch_knn_data.shape',batch_knn_data.shape)
+    print(batch_knn_data.shape)
 
     # Add features to the extractor
     for name_feature in name_features:

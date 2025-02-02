@@ -200,7 +200,7 @@ def feature_1_mean_z(knn_data, _, data):
     print('z_min.shape',z_min.shape)
     z_values = knn_data[:, :, :, 2, :]  # Координаты z из (1, M, M, 7, K)
     print('z_values', z_values.shape)
-    mean_z = (z_values - z_min.view(z_min.shape[0], 1, 1, 1)).mean(dim=-1)  # Среднее по соседям K
+    mean_z = (z_values - z_min).mean(dim=-1)  # Среднее по соседям K
     return mean_z.unsqueeze(-1)  # Добавляем измерение для согласованности
 
 def feature_2_mode_color(knn_data, _, __):

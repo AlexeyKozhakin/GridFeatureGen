@@ -13,14 +13,14 @@
     "filter_info": "file_info.csv"
   },
   "features": {
-    "input_directory": "/home/alexey/MUSAC/data/Malta/Sliema_las_cut_100",
-    "num_points": 24200,
+    "input_directory": "/home/alexey/MUSAC/data/Malta/Marfa_las_cut_100",
+    "num_points": 3000,
     "grid_size": 256,
     "num_neighbors": 4,
     "batch_size": 4,
     "features_to_generate": ["mean_z_minus_z_min", "std_z", "mean_distance"],
     "meta_file": "meta_features.json",
-    "features_output_directory": "/home/alexey/MUSAC/data/Malta/Sliema_features_cut_100_pt"
+    "features_output_directory": "/home/alexey/MUSAC/data/Malta/Marfa_features_cut_100_pt"
   },
   "statistics": {
     "input_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/gfg/data_features_100",
