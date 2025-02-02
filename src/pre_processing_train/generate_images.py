@@ -8,11 +8,12 @@ import json
 
 # Function to convert tensor to image and save it
 def tensor_to_image(tensor_path, output_dir, channels):
-
+    channels = [0, 1, 2]
+    print('channels',channels)
     # Load the tensor from the .pt file
     tensor = torch.load(tensor_path)
 
-
+    print('tensor.ndim',tensor.ndim)
     # Check if the tensor has at least one channel
     if tensor.ndim != 3 or tensor.shape[2] < max(channels):
         print(f"Tensor in {tensor_path} does not have enough channels.")
