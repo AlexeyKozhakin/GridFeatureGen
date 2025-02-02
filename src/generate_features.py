@@ -35,7 +35,7 @@ os.makedirs(output_dir, exist_ok=True)
 file_paths = [os.path.join(file_dir, f) for f in os.listdir(file_dir) if f.endswith('.las')]
 
 # Initialize Dataset and DataLoader
-base_dataset = LASDataset(file_paths, num_points_lim)
+base_dataset = LASDataset(file_paths, num_points_lim, colors=False)
 data_loader = DataLoader(base_dataset, batch_size=batch_size, shuffle=False)
 
 # Create instances of GridTransformator and FeatureExtractor

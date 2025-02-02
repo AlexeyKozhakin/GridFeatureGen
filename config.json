@@ -4,23 +4,23 @@
     "output_directory": "path/to/output"
   },
   "analysis": {
-   "input_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/data_las_cut_100",
+   "input_directory": "/home/alexey/MUSAC/data/Malta/Marfa_las_cut_100",
     "batch_size": 128,
     "output_csv": "analysis_num_points.csv"
   },
   "filtering": {
-    "threshold_points": 397280,
+    "threshold_points": 4000,
     "filter_info": "file_info.csv"
   },
   "features": {
-    "input_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/data_las_cut_100",
-    "num_points": 262144,
+    "input_directory": "/home/alexey/MUSAC/data/Malta/Marfa_las_cut_100",
+    "num_points": 3000,
     "grid_size": 256,
     "num_neighbors": 4,
     "batch_size": 4,
-    "features_to_generate": ["mean_z_minus_z_min", "std_z", "mean_distance", "class"],
+    "features_to_generate": ["mean_z_minus_z_min", "std_z", "mean_distance"],
     "meta_file": "meta_features.json",
-    "features_output_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/gfg/data_features_100"
+    "features_output_directory": "/home/alexey/MUSAC/data/Malta/Marfa_features_cut_100_pt"
   },
   "statistics": {
     "input_directory": "/mnt/working-ssd/alexey_kozhakin/MUSAC/data/STPLS3D/gfg/data_features_100",

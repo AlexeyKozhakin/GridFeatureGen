@@ -76,7 +76,9 @@ def get_knn_data(data, M, K):
     Returns:
         torch.Tensor: Тензор ближайших соседей (B, M, M, 7, K).
     """
-    B, N, _ = data.shape
+    B, N, F = data.shape
+    print("================== TEST Features =====================")
+    print("F=",F)
     grid = get_mesh_grid(data, M)  # (B, M, M, 2)
 
     # Расчет расстояний от точек сетки до каждой точки облака по координатам x, y
@@ -95,7 +97,7 @@ def get_knn_data(data, M, K):
     knn_data = data[batch_indices, knn_indices]  # (B, M*M, K, 7)
 
     # Преобразование в итоговый тензор (B, M, M, 7, K)
-    knn_data = knn_data.reshape(B, M, M, K, 7).permute(0, 1, 2, 4, 3)  # (B, M, M, 7, K)
+    knn_data = knn_data.reshape(B, M, M, K, F).permute(0, 1, 2, 4, 3)  # (B, M, M, 7, K)
     return knn_data, grid
 
 def random_point_sampling(points, num_samples):
@@ -108,7 +110,7 @@ def random_point_sampling(points, num_samples):
     indices = torch.randperm(num_points)[:num_samples]
     return points[indices], indices
 
-def load_las_to_tensor(file_path, num_points_lim=4096):
+def load_las_to_tensor(file_path, num_points_lim=4096, colors=True, color_scale=255, classes_label=False):
     """
     Обрабатывает один LAS файл и возвращает выборку точек и классов в виде тензоров.
     file_path: Путь к LAS файлу.
@@ -118,24 +120,34 @@ def load_las_to_tensor(file_path, num_points_lim=4096):
         las = laspy.read(file_path)
 
         # Извлечение координат и цветовых данных
-        points = torch.tensor(np.vstack((las.x-np.min(las.x), las.y-np.min(las.y), las.z, las.red/65535*256, las.green/65535*256, las.blue/65535*256)).T,
+        if colors and color_scale == 65535:
+            points = torch.tensor(np.vstack((las.x-np.min(las.x), las.y-np.min(las.y), las.z, las.red/65535*256, las.green/65535*256, las.blue/65535*256)).T,
             dtype=torch.float32)
-        # Тензор с размерностью (N, 6)
+        elif colors and color_scale == 255:
+            points = torch.tensor(np.vstack((las.x-np.min(las.x), las.y-np.min(las.y), las.z, las.green, las.blue)).T,
+            dtype=torch.float32)
+        else:
+            points = torch.tensor(np.vstack((las.x-np.min(las.x), las.y-np.min(las.y), las.z)).T,
+            dtype=torch.float32)
 
+        # Тензор с размерностью (N, 6)
+        if classes_label:
         # Извлечение классов
-        classes = torch.tensor(las.classification, dtype=torch.int64)  # Тензор с классами (N,)
+            classes = torch.tensor(las.classification, dtype=torch.int64)  # Тензор с классами (N,)
 
         # Проверка количества точек
         num_points = points.shape[0]
         if num_points > num_points_lim:
             # Случайная выборка точек
             sampled_points, sampled_indices = random_point_sampling(points, num_points_lim)
-            
+            if classes_label:
             # Получаем классы для отобранных точек
-            sampled_classes = classes[sampled_indices]
-
+                sampled_classes = classes[sampled_indices]
+                out =  torch.cat((sampled_points, sampled_classes.unsqueeze(-1)), dim=1)
+            else:
+                out =  sampled_points
             # Объединяем координаты и классы
-            return torch.cat((sampled_points, sampled_classes.unsqueeze(-1)), dim=1)  # (num_points_lim, 7)
+            return out
         else:
             print(f"Количество точек в файле меньше лимита {num_points_lim}, пропуск файла.")
             return None
@@ -145,10 +157,10 @@ def load_las_to_tensor(file_path, num_points_lim=4096):
 
 
 class LASDataset(torch.utils.data.Dataset):
-    def __init__(self, file_paths, num_points_lim=4096):
+    def __init__(self, file_paths, num_points_lim=4096, colors = True):
         self.file_paths = file_paths
         self.num_points_lim = num_points_lim
-
+        self.colors = colors
     def __len__(self):
         return len(self.file_paths)
 
@@ -156,7 +168,7 @@ class LASDataset(torch.utils.data.Dataset):
         file_path = self.file_paths[idx]
         file_name = Path(file_path).stem
         num_points_lim = self.num_points_lim
-        points = load_las_to_tensor(file_path, num_points_lim)  # (N, 7)
+        points = load_las_to_tensor(file_path, num_points_lim, colors=self.colors)  # (N, 7)
         return file_name, points
 
 # Основной класс для модульного добавления признаков
